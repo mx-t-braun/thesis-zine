@@ -1,32 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Thesis Zine</title>
-  <link rel="stylesheet" href="css/dearflip.css">
-  <style>
-    body { margin: 0; display: flex; justify-content: center; background: #eee; }
-    #flipbook { width: 900px; height: 600px; margin: 40px auto; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Thesis Zine — StPageFlip</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div id="flipbook"></div>
+  <main>
+    <!-- Book container -->
+    <div id="book" aria-label="Flipbook">
+      <!-- Each .page is one page; put your thesis content inside -->
+      <div class="page cover" data-density="hard">
+        <h1>My Thesis Zine</h1>
+        <p>Click or drag the corner to flip pages.</p>
+        <p><small>Built with the free StPageFlip library.</small></p>
+      </div>
 
-  <!-- jQuery + DearFlip -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="js/dearflip.min.js"></script>
+      <div class="page">
+        <h2>Video Page</h2>
+        <video controls width="100%">
+          <source src="media/video.mp4" type="video/mp4" />
+          Your browser doesn’t support the video tag.
+        </video>
+        <p class="caption">Replace <code>media/video.mp4</code> with your own file.</p>
+      </div>
+
+      <div class="page">
+        <h2>Audio + Image Page</h2>
+        <audio controls>
+          <source src="media/audio.mp3" type="audio/mpeg" />
+          Your browser doesn’t support the audio element.
+        </audio>
+        <img src="media/image.svg" alt="Sample image" />
+        <p class="caption">Swap out <code>media/audio.mp3</code> and <code>media/image.svg</code>.</p>
+      </div>
+
+      <div class="page" data-density="hard">
+        <h2>Thanks for reading</h2>
+        <p>Add more pages by duplicating these <code>.page</code> blocks.</p>
+      </div>
+    </div>
+
+    <!-- Optional UI -->
+    <div class="controls">
+      <button id="prevBtn" aria-label="Previous page">◀ Prev</button>
+      <span id="pageInfo" aria-live="polite">Page 1</span>
+      <button id="nextBtn" aria-label="Next page">Next ▶</button>
+    </div>
+  </main>
+
+  <!-- StPageFlip via CDN (no install needed) -->
+  <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+
   <script>
-    jQuery(function($) {
-      $('#flipbook').dearflip({
-        source: [
-          { src: 'media/page1.html' },
-          { src: 'media/page2.html' },
-          { src: 'media/page3.html' }
-        ],
-        backgroundColor: "#fafafa",
-        autoEnableOutline: false
-      });
+    // Initialize the flipbook
+    const bookEl = document.getElementById('book');
+    // When using the <script> build, the class is exposed on St.PageFlip (docs)
+    const pageFlip = new St.PageFlip(bookEl, {
+      width: 900,      // page width (px)
+      height: 600,     // page height (px)
+      showCover: true, // treats first/last pages as hard cover
+      autoSize: true,  // adjusts container to book size
+      usePortrait: true
     });
+
+    // Load pages from existing HTML nodes
+    pageFlip.loadFromHTML(document.querySelectorAll('#book .page'));
+
+    // Simple prev/next UI
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageInfo = document.getElementById('pageInfo');
+
+    function updatePageInfo() {
+      const total = pageFlip.getPageCount();
+      const curr = pageFlip.getCurrentPageIndex() + 1;
+      pageInfo.textContent = `Page ${curr} / ${total}`;
+    }
+    updatePageInfo();
+
+    prevBtn.addEventListener('click', () => { pageFlip.flipPrev('top'); });
+    nextBtn.addEventListener('click', () => { pageFlip.flipNext('top'); });
+
+    // Update label on flip
+    pageFlip.on('flip', updatePageInfo);
   </script>
 </body>
 </html>
