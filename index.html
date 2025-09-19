@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Thesis Zine</title>
+  <link rel="stylesheet" href="css/dearflip.css">
+  <style>
+    body { margin: 0; display: flex; justify-content: center; background: #eee; }
+    #flipbook { width: 900px; height: 600px; margin: 40px auto; }
+  </style>
+</head>
+<body>
+  <div id="flipbook"></div>
+
+  <!-- jQuery + DearFlip -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/dearflip.min.js"></script>
+  <script>
+    jQuery(function($) {
+      $('#flipbook').dearflip({
+        source: [
+          { src: 'media/page1.html' },
+          { src: 'media/page2.html' },
+          { src: 'media/page3.html' }
+        ],
+        backgroundColor: "#fafafa",
+        autoEnableOutline: false
+      });
+    });
+  </script>
+</body>
+</html>
